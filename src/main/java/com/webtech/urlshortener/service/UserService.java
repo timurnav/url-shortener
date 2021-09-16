@@ -19,6 +19,19 @@ public class UserService {
         return repository.save(user);
     }
 
+    public UserTO urlAdded(int userId) {
+        UserTO user = repository.getById(userId);
+        if (user.urlsCreated == user.maxUrls) {
+            throw new RuntimeException("Urls number exceeded, max is " + user.maxUrls);
+        }
+        return repository.save(user.withUrlIncremented());
+    }
+
+    public UserTO urlRemoved(int userId) {
+        UserTO user = repository.getById(userId);
+        return repository.save(user.withUrlDecremented());
+    }
+
     public void delete(int userId) {
         repository.deleteById(userId);
     }

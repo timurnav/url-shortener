@@ -13,9 +13,11 @@ import java.util.concurrent.ThreadLocalRandom;
 public class UrlServiceImpl implements LongUrlProvider, UrlService {
 
     private final UrlRepository repository;
+    private final UserService userService;
 
-    public UrlServiceImpl(UrlRepository repository) {
+    public UrlServiceImpl(UrlRepository repository, UserService userService) {
         this.repository = repository;
+        this.userService = userService;
     }
 
     @Override
@@ -25,6 +27,7 @@ public class UrlServiceImpl implements LongUrlProvider, UrlService {
 
     @Override
     public ShortenedUrlTO shorten(int userId, ShortenUrlRequest shortenUrlRequest) {
+        userService.urlAdded(userId);
         byte[] r = new byte[6];
         Random random = ThreadLocalRandom.current();
         random.nextBytes(r);
@@ -34,6 +37,7 @@ public class UrlServiceImpl implements LongUrlProvider, UrlService {
 
     @Override
     public void delete(int userId, int urlId) {
+        userService.urlRemoved(userId);
         repository.remove(userId, urlId);
     }
 }
