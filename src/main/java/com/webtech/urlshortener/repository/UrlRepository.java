@@ -1,4 +1,4 @@
-package com.webtech.urlshortener.dao;
+package com.webtech.urlshortener.repository;
 
 import org.springframework.stereotype.Repository;
 

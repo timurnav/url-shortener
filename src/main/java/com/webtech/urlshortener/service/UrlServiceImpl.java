@@ -1,6 +1,6 @@
 package com.webtech.urlshortener.service;
 
-import com.webtech.urlshortener.dao.UrlRepository;
+import com.webtech.urlshortener.repository.UrlRepository;
 import com.webtech.urlshortener.service.dto.ShortenUrlRequest;
 import com.webtech.urlshortener.service.dto.ShortenedUrlTO;
 import org.apache.tomcat.util.codec.binary.Base64;
