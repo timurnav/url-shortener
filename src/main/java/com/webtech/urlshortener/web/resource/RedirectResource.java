@@ -18,7 +18,7 @@ public class RedirectResource {
     public String processForm(@PathVariable String shortUrl) {
         String longUrl = urlProvider.getForShort(shortUrl);
         if (longUrl == null) {
-            return "not_found.html";
+            return "/not_found.html";
         }
         return "redirect:" + longUrl;
     }

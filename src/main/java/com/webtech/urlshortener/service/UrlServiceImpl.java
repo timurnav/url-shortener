@@ -12,24 +12,28 @@ import java.util.concurrent.ThreadLocalRandom;
 @Service
 public class UrlServiceImpl implements LongUrlProvider, UrlService {
 
-    private final UrlRepository dao;
+    private final UrlRepository repository;
 
-    public UrlServiceImpl(UrlRepository dao) {
-        this.dao = dao;
+    public UrlServiceImpl(UrlRepository repository) {
+        this.repository = repository;
     }
 
     @Override
     public String getForShort(String shortUrl) {
-        return dao.findByShortUrl(shortUrl);
+        return repository.findByShortUrl(shortUrl);
     }
 
     @Override
-    public ShortenedUrlTO shorten(ShortenUrlRequest shortenUrlRequest) {
+    public ShortenedUrlTO shorten(int userId, ShortenUrlRequest shortenUrlRequest) {
         byte[] r = new byte[6];
         Random random = ThreadLocalRandom.current();
         random.nextBytes(r);
         String shortUrl = Base64.encodeBase64String(r);
-        dao.save(shortenUrlRequest.longUrl, shortUrl);
-        return new ShortenedUrlTO(shortenUrlRequest.longUrl, shortUrl);
+        return repository.save(userId, shortenUrlRequest.longUrl, shortUrl);
+    }
+
+    @Override
+    public void delete(int userId, int urlId) {
+        repository.remove(userId, urlId);
     }
 }

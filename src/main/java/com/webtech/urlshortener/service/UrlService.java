@@ -5,5 +5,7 @@ import com.webtech.urlshortener.service.dto.ShortenedUrlTO;
 
 public interface UrlService {
 
-    ShortenedUrlTO shorten(ShortenUrlRequest request);
+    ShortenedUrlTO shorten(int userId, ShortenUrlRequest request);
+
+    void delete(int userId, int urlId);
 }
