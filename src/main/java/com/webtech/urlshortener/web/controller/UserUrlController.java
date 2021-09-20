@@ -2,7 +2,7 @@ package com.webtech.urlshortener.web.controller;
 
 import com.webtech.urlshortener.service.UrlService;
 import com.webtech.urlshortener.service.dto.ShortenUrlRequest;
-import com.webtech.urlshortener.service.dto.ShortenedUrlTO;
+import com.webtech.urlshortener.service.dto.ShortenUrlResponse;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,9 +16,8 @@ public class UserUrlController {
     }
 
     @PostMapping
-    public ShortenedUrlTO shorten(
-            @PathVariable int userId,
-            @RequestBody ShortenUrlRequest shortenRequest) {
+    public ShortenUrlResponse shorten(@PathVariable int userId,
+                                      @RequestBody ShortenUrlRequest shortenRequest) {
         return urlService.shorten(userId, shortenRequest);
     }
 

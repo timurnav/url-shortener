@@ -1,11 +1,11 @@
 package com.webtech.urlshortener.service;
 
 import com.webtech.urlshortener.service.dto.ShortenUrlRequest;
-import com.webtech.urlshortener.service.dto.ShortenedUrlTO;
+import com.webtech.urlshortener.service.dto.ShortenUrlResponse;
 
 public interface UrlService {
 
-    ShortenedUrlTO shorten(int userId, ShortenUrlRequest request);
+    ShortenUrlResponse shorten(int userId, ShortenUrlRequest request);
 
     void delete(int userId, int urlId);
 }
