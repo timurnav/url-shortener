@@ -30,10 +30,10 @@ public class UrlRepository {
 //        return to.longUrl;
     }
 
-    public ShortenedUrlTO save(int userId, String longUrl, String shortUrl) {
+    public ShortenedUrlTO save(int userId, ShortenedUrlTO toSave) {
         int id = counter.incrementAndGet();
-        ShortenedUrlTO to = new ShortenedUrlTO(id, longUrl, shortUrl);
-        urlsByShort.put(shortUrl, to);
+        ShortenedUrlTO to = new ShortenedUrlTO(id, toSave.longUrl, toSave.shortUrl);
+        urlsByShort.put(toSave.shortUrl, to);
         urlsById.put(id, to);
         return to;
     }

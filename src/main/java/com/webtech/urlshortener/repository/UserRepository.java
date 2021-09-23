@@ -34,8 +34,8 @@ public class UserRepository {
         }
     }
 
-    public void deleteById(int userId) {
-        users.remove(userId);
+    public boolean deleteById(int userId) {
+        return users.remove(userId) != null;
     }
 
     public List<UserTO> getAll() {

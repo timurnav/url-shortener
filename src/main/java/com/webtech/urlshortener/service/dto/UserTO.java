@@ -26,4 +26,15 @@ public class UserTO {
     public UserTO withUrlDecremented() {
         return new UserTO(id, name, email, urlsCreated - 1, maxUrls);
     }
+
+    @Override
+    public String toString() {
+        return "UserTO{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", urlsCreated=" + urlsCreated +
+                ", maxUrls=" + maxUrls +
+                '}';
+    }
 }

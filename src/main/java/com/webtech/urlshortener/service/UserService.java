@@ -2,6 +2,8 @@ package com.webtech.urlshortener.service;
 
 import com.webtech.urlshortener.repository.UserRepository;
 import com.webtech.urlshortener.service.dto.UserTO;
+import com.webtech.urlshortener.service.exceptions.UserNotFoundException;
+import com.webtech.urlshortener.service.exceptions.UserUrlNumberExceededException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,11 +22,19 @@ public class UserService {
     }
 
     public UserTO urlAdded(int userId) {
-        UserTO user = repository.getById(userId);
-        if (user.urlsCreated == user.maxUrls) {
-            throw new RuntimeException("Urls number exceeded, max is " + user.maxUrls);
-        }
+        UserTO user = validateUrlAdding(userId);
         return repository.save(user.withUrlIncremented());
+    }
+
+    private UserTO validateUrlAdding(int userId) {
+        UserTO user = repository.getById(userId);
+        if (user == null) {
+            throw new UserNotFoundException(userId);
+        }
+        if (user.urlsCreated == user.maxUrls) {
+            throw new UserUrlNumberExceededException(user);
+        }
+        return user;
     }
 
     public UserTO urlRemoved(int userId) {
@@ -33,7 +43,10 @@ public class UserService {
     }
 
     public void delete(int userId) {
-        repository.deleteById(userId);
+        if (repository.deleteById(userId)) {
+            return;
+        }
+        throw new UserNotFoundException(userId);
     }
 
     public List<UserTO> fetchAll() {
