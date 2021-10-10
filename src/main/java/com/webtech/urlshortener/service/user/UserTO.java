@@ -1,17 +1,18 @@
-package com.webtech.urlshortener.service.dto;
+package com.webtech.urlshortener.service.user;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.webtech.urlshortener.repository.UserEntity;
 
 public class UserTO {
 
-    public final Integer id;
+    public final int id;
     public final String name;
     public final String email;
     public final int urlsCreated;
     public final int maxUrls;
 
     @JsonCreator
-    public UserTO(Integer id, String name, String email, int urlsCreated, int maxUrls) {
+    public UserTO(int id, String name, String email, int urlsCreated, int maxUrls) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -19,12 +20,9 @@ public class UserTO {
         this.maxUrls = maxUrls;
     }
 
-    public UserTO withUrlIncremented() {
-        return new UserTO(id, name, email, urlsCreated + 1, maxUrls);
-    }
-
-    public UserTO withUrlDecremented() {
-        return new UserTO(id, name, email, urlsCreated - 1, maxUrls);
+    public static UserTO fromEntity(UserEntity entity) {
+        return new UserTO(entity.getId(), entity.getName(), entity.getEmail(),
+                entity.getUrlsCreated(), entity.getMaxUrls());
     }
 
     @Override

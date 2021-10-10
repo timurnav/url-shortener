@@ -1,4 +1,4 @@
-package com.webtech.urlshortener.service.dto;
+package com.webtech.urlshortener.service.url;
 
 public class ShortenUrlResponse {
 
@@ -14,9 +14,5 @@ public class ShortenUrlResponse {
         this.shortUrl = shortUrl;
         this.urlsCreated = urlsCreated;
         this.maxUrls = maxUrls;
-    }
-
-    public static ShortenUrlResponse of(ShortenedUrlTO urlTO, UserTO userTO) {
-        return new ShortenUrlResponse(urlTO.id, urlTO.longUrl, urlTO.shortUrl, userTO.urlsCreated, userTO.maxUrls);
     }
 }

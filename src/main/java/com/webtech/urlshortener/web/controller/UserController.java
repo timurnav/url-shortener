@@ -1,9 +1,12 @@
 package com.webtech.urlshortener.web.controller;
 
-import com.webtech.urlshortener.service.UserService;
-import com.webtech.urlshortener.service.dto.UserTO;
+import com.webtech.urlshortener.service.user.CreateUserTO;
+import com.webtech.urlshortener.service.user.UserDataUpdateTO;
+import com.webtech.urlshortener.service.user.UserService;
+import com.webtech.urlshortener.service.user.UserTO;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -17,8 +20,14 @@ public class UserController {
     }
 
     @PostMapping
-    public UserTO save(@RequestBody UserTO user) {
-        return service.save(user);
+    public UserTO create(@Valid @RequestBody CreateUserTO createTO) {
+        return service.create(createTO);
+    }
+
+    @PutMapping("/{userId}")
+    public UserTO create(@PathVariable int userId,
+                         @Valid @RequestBody UserDataUpdateTO adjustTO) {
+        return service.adjust(userId, adjustTO);
     }
 
     @DeleteMapping("/{userId}")

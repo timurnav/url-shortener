@@ -1,21 +1,21 @@
 package com.webtech.urlshortener.web.controller;
 
-import com.webtech.urlshortener.service.UrlService;
-import com.webtech.urlshortener.service.dto.ShortenUrlRequest;
-import com.webtech.urlshortener.service.dto.ShortenUrlResponse;
+import com.webtech.urlshortener.service.url.ShortenUrlRequest;
+import com.webtech.urlshortener.service.url.ShortenUrlResponse;
+import com.webtech.urlshortener.service.url.UserUrlService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("user/{userId}/urls")
 public class UserUrlController {
 
-    private final UrlService urlService;
+    private final UserUrlService urlService;
 
-    public UserUrlController(UrlService urlService) {
+    public UserUrlController(UserUrlService urlService) {
         this.urlService = urlService;
     }
 
-    @PostMapping
+    @PutMapping
     public ShortenUrlResponse shorten(@PathVariable int userId,
                                       @RequestBody ShortenUrlRequest shortenRequest) {
         return urlService.shorten(userId, shortenRequest);

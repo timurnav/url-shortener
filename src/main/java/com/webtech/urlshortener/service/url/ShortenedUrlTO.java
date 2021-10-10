@@ -1,4 +1,4 @@
-package com.webtech.urlshortener.service.dto;
+package com.webtech.urlshortener.service.url;
 
 public class ShortenedUrlTO {
 

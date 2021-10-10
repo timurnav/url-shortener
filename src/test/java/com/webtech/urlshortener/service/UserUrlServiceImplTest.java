@@ -1,24 +1,30 @@
 package com.webtech.urlshortener.service;
 
+import com.webtech.urlshortener.repository.ShortenedUrlEntity;
 import com.webtech.urlshortener.repository.UrlRepository;
-import com.webtech.urlshortener.service.dto.ShortenUrlRequest;
-import com.webtech.urlshortener.service.dto.ShortenUrlResponse;
-import com.webtech.urlshortener.service.dto.ShortenedUrlTO;
-import com.webtech.urlshortener.service.dto.UserTO;
+import com.webtech.urlshortener.service.url.RandomHashProvider;
+import com.webtech.urlshortener.service.url.ShortenUrlRequest;
+import com.webtech.urlshortener.service.url.ShortenUrlResponse;
+import com.webtech.urlshortener.service.url.UserUrlServiceImpl;
+import com.webtech.urlshortener.service.user.UserService;
+import com.webtech.urlshortener.service.user.UserTO;
+import com.webtech.urlshortener.service.user.UserUrlAdded;
+import com.webtech.urlshortener.service.user.UserUrlRemoved;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
+import java.time.Instant;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
-public class UrlServiceImplTest {
+public class UserUrlServiceImplTest {
 
     public static final int USER_ID = 1;
     public static final int URLS_CREATED = 37;
@@ -28,27 +34,35 @@ public class UrlServiceImplTest {
     public static final String LONG_URL = "URL";
     public static final String SHORT_URL = "SHORT_URL";
 
+    public static final ShortenedUrlEntity ENTITY =
+            new ShortenedUrlEntity(URL_ID, LONG_URL, SHORT_URL, Instant.now(), USER_ID);
+
     private final UrlRepository repo = Mockito.mock(UrlRepository.class);
     private final UserService userService = Mockito.mock(UserService.class);
     private final RandomHashProvider hashProvider = Mockito.mock(RandomHashProvider.class);
-    private final UrlServiceImpl service = new UrlServiceImpl(repo, userService, hashProvider);
+    private final UserUrlServiceImpl service = new UserUrlServiceImpl(repo, userService, hashProvider);
+
+    @AfterEach
+    public void tearDown() {
+        Mockito.reset(repo, userService, hashProvider);
+    }
 
     @Test
     public void testDelete() {
         service.delete(USER_ID, URL_ID);
 
-        verify(repo).remove(USER_ID, URL_ID);
-        verify(userService).urlRemoved(USER_ID);
+        verify(repo).remove(URL_ID);
+        verify(userService).adjust(eq(USER_ID), any(UserUrlRemoved.class));
     }
 
     @Test
     public void testShorten() {
-        Mockito.when(userService.urlAdded(USER_ID))
+        Mockito.when(userService.adjust(eq(USER_ID), any(UserUrlAdded.class)))
                 .thenReturn(USER);
         Mockito.when(hashProvider.getNextHash())
                 .thenReturn(SHORT_URL);
-        Mockito.when(repo.save(eq(USER_ID), any(ShortenedUrlTO.class)))
-                .thenReturn(new ShortenedUrlTO(URL_ID, LONG_URL, SHORT_URL));
+        Mockito.when(repo.save(any(ShortenedUrlEntity.class)))
+                .thenReturn(ENTITY);
 
         ShortenUrlResponse result = service.shorten(USER_ID, new ShortenUrlRequest(LONG_URL));
 
@@ -56,20 +70,20 @@ public class UrlServiceImplTest {
                 .usingRecursiveComparison()
                 .isEqualTo(new ShortenUrlResponse(URL_ID, LONG_URL, SHORT_URL, URLS_CREATED, MAX_URLS));
 
-        ArgumentCaptor<ShortenedUrlTO> captor = ArgumentCaptor.forClass(ShortenedUrlTO.class);
-        verify(repo).save(eq(USER_ID), captor.capture());
-        List<ShortenedUrlTO> allValues = captor.getAllValues();
+        ArgumentCaptor<ShortenedUrlEntity> captor = ArgumentCaptor.forClass(ShortenedUrlEntity.class);
+        verify(repo).save(captor.capture());
+        List<ShortenedUrlEntity> allValues = captor.getAllValues();
         Assertions.assertThat(allValues).hasSize(1);
-        ShortenedUrlTO passedArg = allValues.get(0);
+        ShortenedUrlEntity passedArg = allValues.get(0);
 
         Assertions.assertThat(passedArg)
                 .usingRecursiveComparison()
-                .ignoringFields("id")
-                .isEqualTo(new ShortenedUrlTO(1, LONG_URL, SHORT_URL));
+                .ignoringFields("id", "created")
+                .isEqualTo(ENTITY);
 
-        verify(userService).urlAdded(USER_ID);
+        verify(userService).adjust(eq(USER_ID), any(UserUrlAdded.class));
 
-        verify(userService, never()).urlRemoved(USER_ID);
+        verify(userService, never()).adjust(eq(USER_ID), any(UserUrlRemoved.class));
     }
 
     @Test

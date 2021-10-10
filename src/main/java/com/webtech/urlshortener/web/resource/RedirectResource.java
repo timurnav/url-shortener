@@ -1,6 +1,6 @@
 package com.webtech.urlshortener.web.resource;
 
-import com.webtech.urlshortener.service.LongUrlProvider;
+import com.webtech.urlshortener.service.url.LongUrlProvider;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,10 +18,8 @@ public class RedirectResource {
     public String processForm(@PathVariable String shortUrl) {
         String longUrl = urlProvider.getForShort(shortUrl);
         if (longUrl == null) {
-            return "/not_found.html";
+            return "redirect:/not_found.html";
         }
         return "redirect:" + longUrl;
     }
-
-
 }
