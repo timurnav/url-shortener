@@ -1,6 +1,7 @@
 package com.webtech.urlshortener.service.user;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.webtech.urlshortener.service.validation.StrongPassword;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Email;
@@ -15,7 +16,7 @@ public class CreateUserTO {
     @NotNull
     @Email
     public final String email;
-    // todo add custom validation
+    @StrongPassword
     public final String password;
     public final boolean isAdmin;
 
