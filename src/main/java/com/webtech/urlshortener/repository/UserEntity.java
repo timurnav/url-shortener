@@ -1,6 +1,6 @@
 package com.webtech.urlshortener.repository;
 
-import java.time.Instant;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -10,7 +10,7 @@ public class UserEntity {
     private String name;
     private String email;
     private String password;
-    private Instant registered;
+    private Date registered;
     private int urlsCreated;
     private int maxUrls;
     private Set<UserRole> roles = new HashSet<>();
@@ -47,11 +47,11 @@ public class UserEntity {
         this.password = password;
     }
 
-    public Instant getRegistered() {
+    public Date getRegistered() {
         return registered;
     }
 
-    public void setRegistered(Instant registered) {
+    public void setRegistered(Date registered) {
         this.registered = registered;
     }
 

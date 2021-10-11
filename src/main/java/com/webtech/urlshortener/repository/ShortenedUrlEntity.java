@@ -1,19 +1,19 @@
 package com.webtech.urlshortener.repository;
 
-import java.time.Instant;
+import java.util.Date;
 
 public class ShortenedUrlEntity {
 
     private int id;
     private String longUrl;
     private String shortUrl;
-    private Instant created;
+    private Date created;
     private int ownerId;
 
     public ShortenedUrlEntity() {
     }
 
-    public ShortenedUrlEntity(int id, String longUrl, String shortUrl, Instant created, int ownerId) {
+    public ShortenedUrlEntity(int id, String longUrl, String shortUrl, Date created, int ownerId) {
         this.id = id;
         this.longUrl = longUrl;
         this.shortUrl = shortUrl;
@@ -45,11 +45,11 @@ public class ShortenedUrlEntity {
         this.shortUrl = shortUrl;
     }
 
-    public Instant getCreated() {
+    public Date getCreated() {
         return created;
     }
 
-    public void setCreated(Instant created) {
+    public void setCreated(Date created) {
         this.created = created;
     }
 

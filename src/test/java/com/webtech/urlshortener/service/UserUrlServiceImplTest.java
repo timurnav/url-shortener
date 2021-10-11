@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
-import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -35,7 +35,7 @@ public class UserUrlServiceImplTest {
     public static final String SHORT_URL = "SHORT_URL";
 
     public static final ShortenedUrlEntity ENTITY =
-            new ShortenedUrlEntity(URL_ID, LONG_URL, SHORT_URL, Instant.now(), USER_ID);
+            new ShortenedUrlEntity(URL_ID, LONG_URL, SHORT_URL, new Date(), USER_ID);
 
     private final UrlRepository repo = Mockito.mock(UrlRepository.class);
     private final UserService userService = Mockito.mock(UserService.class);

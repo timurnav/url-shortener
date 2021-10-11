@@ -5,7 +5,7 @@ import com.webtech.urlshortener.repository.UserRepository;
 import com.webtech.urlshortener.repository.UserRole;
 import com.webtech.urlshortener.service.exceptions.UserNotFoundException;
 
-import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,7 +28,7 @@ public class UserService {
         user.setPassword(createTo.password);
         user.setMaxUrls(maxUrlsDefault);
         user.setUrlsCreated(0);
-        user.setRegistered(Instant.now());
+        user.setRegistered(new Date());
         if (createTo.isAdmin) {
             user.getRoles().add(UserRole.ADMIN);
         }

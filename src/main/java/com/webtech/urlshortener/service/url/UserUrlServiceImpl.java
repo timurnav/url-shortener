@@ -7,7 +7,7 @@ import com.webtech.urlshortener.service.user.UserTO;
 import com.webtech.urlshortener.service.user.UserUrlAdded;
 import com.webtech.urlshortener.service.user.UserUrlRemoved;
 
-import java.time.Instant;
+import java.util.Date;
 
 public class UserUrlServiceImpl implements LongUrlProvider, UserUrlService {
 
@@ -36,7 +36,7 @@ public class UserUrlServiceImpl implements LongUrlProvider, UserUrlService {
         toSave.setLongUrl(shortenUrlRequest.longUrl);
         toSave.setOwnerId(userTO.id);
         toSave.setShortUrl(hashProvider.getNextHash());
-        toSave.setCreated(Instant.now());
+        toSave.setCreated(new Date());
 
         ShortenedUrlEntity saved = repository.save(toSave);
 

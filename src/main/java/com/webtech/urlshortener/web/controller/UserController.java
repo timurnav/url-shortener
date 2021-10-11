@@ -25,7 +25,7 @@ public class UserController {
     }
 
     @PutMapping("/{userId}")
-    public UserTO create(@PathVariable int userId,
+    public UserTO update(@PathVariable int userId,
                          @Valid @RequestBody UserDataUpdateTO adjustTO) {
         return service.adjust(userId, adjustTO);
     }

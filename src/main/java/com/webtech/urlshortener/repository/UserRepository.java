@@ -1,37 +1,73 @@
 package com.webtech.urlshortener.repository;
 
+import com.webtech.urlshortener.service.exceptions.UserNotFoundException;
+import org.springframework.dao.support.DataAccessUtils;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.sql.Types;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
+
+import static org.springframework.jdbc.core.BeanPropertyRowMapper.newInstance;
 
 @Repository
 public class UserRepository {
 
-    private final AtomicInteger counter = new AtomicInteger();
-    private final Map<Integer, UserEntity> users = new HashMap<>();
+    private static final BeanPropertyRowMapper<UserEntity> ROW_MAPPER = newInstance(UserEntity.class);
+
+    private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert insertUser;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+    public UserRepository(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.insertUser = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("users")
+                .usingGeneratedKeyColumns("id");
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+    }
 
     public UserEntity save(UserEntity user) {
         if (user.getId() == null) {
-            int id = counter.incrementAndGet();
-            user.setId(id);
+            return insert(user);
         }
-        users.put(user.getId(), user);
+        return update(user);
+    }
+
+    private UserEntity insert(UserEntity user) {
+        // https://stackoverflow.com/questions/1665846/identity-from-sql-insert-via-jdbctemplate
+        BeanPropertySqlParameterSource parameterSource = new BeanPropertySqlParameterSource(user);
+        Number newKey = insertUser.executeAndReturnKey(parameterSource);
+        user.setId(newKey.intValue());
+        return user;
+    }
+
+    private UserEntity update(UserEntity user) {
+        BeanPropertySqlParameterSource parameterSource = new BeanPropertySqlParameterSource(user);
+        parameterSource.registerSqlType("created", Types.TIMESTAMP);
+        int updated = namedParameterJdbcTemplate.update(
+                "UPDATE users SET name=:name, email=:email, password=:password," +
+                        " urls_created=:urlsCreated, max_urls=:maxUrls WHERE id=:id", parameterSource);
+        if (updated == 0) {
+            throw new UserNotFoundException(user.getId());
+        }
         return user;
     }
 
     public boolean deleteById(int userId) {
-        return users.remove(userId) != null;
+        return jdbcTemplate.update("DELETE FROM users WHERE id=?", userId) != 0;
     }
 
     public List<UserEntity> getAll() {
-        return new ArrayList<>(users.values());
+        return jdbcTemplate.query("SELECT * FROM users ORDER BY name, email", ROW_MAPPER);
     }
 
     public UserEntity getById(int userId) {
-        return users.get(userId);
+        List<UserEntity> query = jdbcTemplate.query("SELECT * FROM users WHERE id=?", ROW_MAPPER, userId);
+        return DataAccessUtils.singleResult(query);
     }
 }
