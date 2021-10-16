@@ -16,7 +16,7 @@ public class PurchaseJdbcRepository implements PurchaseRepository {
 
     @Override
     public void save(PurchaseEntity purchase) {
-        jdbcTemplate.update("INSERT INTO purchases (recipient_id, receipt_id) VALUES ("
-                + purchase.getRecipientId() + ", '" + purchase.getReceiptId() + "')");
+        jdbcTemplate.update("INSERT INTO purchases (recipient_id, receipt_id) VALUES (?,?)",
+                purchase.getRecipientId(), purchase.getReceiptId());
     }
 }
