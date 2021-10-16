@@ -1,7 +1,8 @@
 package com.webtech.urlshortener.service;
 
-import com.webtech.urlshortener.repository.ShortenedUrlEntity;
-import com.webtech.urlshortener.repository.UrlRepository;
+import com.webtech.urlshortener.repository.ShortUrlRepository;
+import com.webtech.urlshortener.repository.entity.ShortUrlEntity;
+import com.webtech.urlshortener.repository.inmem.ShortUrlInMemRepository;
 import com.webtech.urlshortener.service.url.RandomHashProvider;
 import com.webtech.urlshortener.service.url.ShortenUrlRequest;
 import com.webtech.urlshortener.service.url.ShortenUrlResponse;
@@ -34,10 +35,10 @@ public class UserUrlServiceImplTest {
     public static final String LONG_URL = "URL";
     public static final String SHORT_URL = "SHORT_URL";
 
-    public static final ShortenedUrlEntity ENTITY =
-            new ShortenedUrlEntity(URL_ID, LONG_URL, SHORT_URL, new Date(), USER_ID);
+    public static final ShortUrlEntity ENTITY =
+            new ShortUrlEntity(URL_ID, LONG_URL, SHORT_URL, new Date(), USER_ID);
 
-    private final UrlRepository repo = Mockito.mock(UrlRepository.class);
+    private final ShortUrlRepository repo = Mockito.mock(ShortUrlInMemRepository.class);
     private final UserService userService = Mockito.mock(UserService.class);
     private final RandomHashProvider hashProvider = Mockito.mock(RandomHashProvider.class);
     private final UserUrlServiceImpl service = new UserUrlServiceImpl(repo, userService, hashProvider);
@@ -61,7 +62,7 @@ public class UserUrlServiceImplTest {
                 .thenReturn(USER);
         Mockito.when(hashProvider.getNextHash())
                 .thenReturn(SHORT_URL);
-        Mockito.when(repo.save(any(ShortenedUrlEntity.class)))
+        Mockito.when(repo.save(any(ShortUrlEntity.class)))
                 .thenReturn(ENTITY);
 
         ShortenUrlResponse result = service.shorten(USER_ID, new ShortenUrlRequest(LONG_URL));
@@ -70,11 +71,11 @@ public class UserUrlServiceImplTest {
                 .usingRecursiveComparison()
                 .isEqualTo(new ShortenUrlResponse(URL_ID, LONG_URL, SHORT_URL, URLS_CREATED, MAX_URLS));
 
-        ArgumentCaptor<ShortenedUrlEntity> captor = ArgumentCaptor.forClass(ShortenedUrlEntity.class);
+        ArgumentCaptor<ShortUrlEntity> captor = ArgumentCaptor.forClass(ShortUrlEntity.class);
         verify(repo).save(captor.capture());
-        List<ShortenedUrlEntity> allValues = captor.getAllValues();
+        List<ShortUrlEntity> allValues = captor.getAllValues();
         Assertions.assertThat(allValues).hasSize(1);
-        ShortenedUrlEntity passedArg = allValues.get(0);
+        ShortUrlEntity passedArg = allValues.get(0);
 
         Assertions.assertThat(passedArg)
                 .usingRecursiveComparison()

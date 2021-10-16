@@ -1,8 +1,8 @@
 package com.webtech.urlshortener.service.user;
 
-import com.webtech.urlshortener.repository.UserEntity;
 import com.webtech.urlshortener.repository.UserRepository;
-import com.webtech.urlshortener.repository.UserRole;
+import com.webtech.urlshortener.repository.entity.UserEntity;
+import com.webtech.urlshortener.repository.entity.UserRole;
 import com.webtech.urlshortener.service.exceptions.UserNotFoundException;
 
 import java.util.Date;

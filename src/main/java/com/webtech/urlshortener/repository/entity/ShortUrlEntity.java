@@ -1,8 +1,8 @@
-package com.webtech.urlshortener.repository;
+package com.webtech.urlshortener.repository.entity;
 
 import java.util.Date;
 
-public class ShortenedUrlEntity {
+public class ShortUrlEntity {
 
     private int id;
     private String longUrl;
@@ -10,10 +10,10 @@ public class ShortenedUrlEntity {
     private Date created;
     private int ownerId;
 
-    public ShortenedUrlEntity() {
+    public ShortUrlEntity() {
     }
 
-    public ShortenedUrlEntity(int id, String longUrl, String shortUrl, Date created, int ownerId) {
+    public ShortUrlEntity(int id, String longUrl, String shortUrl, Date created, int ownerId) {
         this.id = id;
         this.longUrl = longUrl;
         this.shortUrl = shortUrl;

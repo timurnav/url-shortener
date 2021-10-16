@@ -1,7 +1,7 @@
 package com.webtech.urlshortener.service.user;
 
-import com.webtech.urlshortener.repository.UserEntity;
-import com.webtech.urlshortener.repository.UserRole;
+import com.webtech.urlshortener.repository.entity.UserEntity;
+import com.webtech.urlshortener.repository.entity.UserRole;
 import com.webtech.urlshortener.service.exceptions.UserUrlNumberExceededException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

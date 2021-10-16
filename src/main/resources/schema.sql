@@ -32,10 +32,19 @@ CREATE TABLE user_roles
 CREATE TABLE urls
 (
     id        INTEGER PRIMARY KEY DEFAULT nextval('global_seq'),
-    user_id   INTEGER NOT NULL,
+    owner_id  INTEGER NOT NULL,
     created   TIMESTAMP           DEFAULT now(),
-    long_url  TEXT    NOT NULL,
-    short_url TEXT    NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+    long_url  VARCHAR NOT NULL,
+    short_url VARCHAR NOT NULL,
+    FOREIGN KEY (owner_id) REFERENCES users (id) ON DELETE CASCADE
 );
-CREATE UNIQUE INDEX meals_unique_user_datetime_idx ON urls (user_id, short_url);
+CREATE UNIQUE INDEX short_url_unique_user_idx ON urls (owner_id, short_url);
+
+CREATE TABLE purchases
+(
+    receipt_id   VARCHAR PRIMARY KEY,
+    recipient_id INTEGER NOT NULL,
+    created      TIMESTAMP DEFAULT now(),
+    FOREIGN KEY (recipient_id) REFERENCES users (id) ON DELETE CASCADE
+);
+CREATE UNIQUE INDEX receipt_unique_user_idx ON purchases (receipt_id, recipient_id);

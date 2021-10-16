@@ -1,7 +1,7 @@
 package com.webtech.urlshortener.service.url;
 
-import com.webtech.urlshortener.repository.ShortenedUrlEntity;
-import com.webtech.urlshortener.repository.UrlRepository;
+import com.webtech.urlshortener.repository.ShortUrlRepository;
+import com.webtech.urlshortener.repository.entity.ShortUrlEntity;
 import com.webtech.urlshortener.service.user.UserService;
 import com.webtech.urlshortener.service.user.UserTO;
 import com.webtech.urlshortener.service.user.UserUrlAdded;
@@ -11,11 +11,11 @@ import java.util.Date;
 
 public class UserUrlServiceImpl implements LongUrlProvider, UserUrlService {
 
-    private final UrlRepository repository;
+    private final ShortUrlRepository repository;
     private final UserService userService;
     private final RandomHashProvider hashProvider;
 
-    public UserUrlServiceImpl(UrlRepository repository,
+    public UserUrlServiceImpl(ShortUrlRepository repository,
                               UserService userService,
                               RandomHashProvider hashProvider) {
         this.repository = repository;
@@ -32,13 +32,13 @@ public class UserUrlServiceImpl implements LongUrlProvider, UserUrlService {
     public ShortenUrlResponse shorten(int userId, ShortenUrlRequest shortenUrlRequest) {
         UserTO userTO = userService.adjust(userId, new UserUrlAdded());
 
-        ShortenedUrlEntity toSave = new ShortenedUrlEntity();
+        ShortUrlEntity toSave = new ShortUrlEntity();
         toSave.setLongUrl(shortenUrlRequest.longUrl);
         toSave.setOwnerId(userTO.id);
         toSave.setShortUrl(hashProvider.getNextHash());
         toSave.setCreated(new Date());
 
-        ShortenedUrlEntity saved = repository.save(toSave);
+        ShortUrlEntity saved = repository.save(toSave);
 
         return new ShortenUrlResponse(saved.getId(), saved.getLongUrl(),
                 saved.getShortUrl(), userTO.urlsCreated, userTO.maxUrls);

@@ -1,4 +1,4 @@
-package com.webtech.urlshortener.repository;
+package com.webtech.urlshortener.repository.entity;
 
 import java.util.Date;
 import java.util.HashSet;

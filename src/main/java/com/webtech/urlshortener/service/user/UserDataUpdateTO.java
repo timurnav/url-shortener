@@ -1,7 +1,7 @@
 package com.webtech.urlshortener.service.user;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.webtech.urlshortener.repository.UserEntity;
+import com.webtech.urlshortener.repository.entity.UserEntity;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Email;

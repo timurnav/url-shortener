@@ -1,7 +1,7 @@
 package com.webtech.urlshortener.service.user;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.webtech.urlshortener.repository.UserEntity;
+import com.webtech.urlshortener.repository.entity.UserEntity;
 
 public class UserTO {
 

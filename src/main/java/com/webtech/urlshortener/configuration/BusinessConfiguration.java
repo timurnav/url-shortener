@@ -1,7 +1,7 @@
-package com.webtech.urlshortener.service;
+package com.webtech.urlshortener.configuration;
 
 import com.webtech.urlshortener.repository.PurchaseRepository;
-import com.webtech.urlshortener.repository.UrlRepository;
+import com.webtech.urlshortener.repository.ShortUrlRepository;
 import com.webtech.urlshortener.repository.UserRepository;
 import com.webtech.urlshortener.service.purchase.PurchaseService;
 import com.webtech.urlshortener.service.purchase.UserPurchaseService;
@@ -28,7 +28,7 @@ public class BusinessConfiguration {
 
     @Bean
     public UserUrlServiceImpl userUrlService(UserService userService,
-                                             UrlRepository urlRepository,
+                                             ShortUrlRepository urlRepository,
                                              RandomHashProvider hashProvider) {
         return new UserUrlServiceImpl(urlRepository, userService, hashProvider);
     }

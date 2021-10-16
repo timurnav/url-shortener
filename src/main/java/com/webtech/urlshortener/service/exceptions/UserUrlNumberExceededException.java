@@ -1,6 +1,6 @@
 package com.webtech.urlshortener.service.exceptions;
 
-import com.webtech.urlshortener.repository.UserEntity;
+import com.webtech.urlshortener.repository.entity.UserEntity;
 
 public class UserUrlNumberExceededException extends BaseApplicationException {
 

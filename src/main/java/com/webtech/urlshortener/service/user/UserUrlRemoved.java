@@ -1,6 +1,6 @@
 package com.webtech.urlshortener.service.user;
 
-import com.webtech.urlshortener.repository.UserEntity;
+import com.webtech.urlshortener.repository.entity.UserEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
