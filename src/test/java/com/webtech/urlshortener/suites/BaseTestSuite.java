@@ -10,15 +10,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.function.Consumer;
 
 @SpringBootTest(classes = TestSuiteConfiguration.class)
 @AutoConfigureMockMvc
-@ActiveProfiles("in-memory")
+@ContextConfiguration(initializers = Postgres.Initializer.class)
+@ActiveProfiles("jdbc")
+//@Sql("/sql/clean_up.sql")
+@Transactional
 public abstract class BaseTestSuite {
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper()
@@ -29,8 +36,8 @@ public abstract class BaseTestSuite {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private List<Resettable> resettables;
+    @Autowired(required = false)
+    private List<Resettable> resettables = new ArrayList<>();
 
     @AfterEach
     void clearUp() {
@@ -47,6 +54,9 @@ public abstract class BaseTestSuite {
         user.setName("Name");
         user.setEmail("test@test.com");
         user.setPassword("Strong1?");
+        user.setRegistered(new Date());
+        user.setUrlsCreated(0);
+        user.setMaxUrls(10);
         builder.accept(user);
         return userRepository.save(user);
     }
