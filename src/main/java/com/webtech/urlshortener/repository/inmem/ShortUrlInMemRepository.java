@@ -1,5 +1,6 @@
 package com.webtech.urlshortener.repository.inmem;
 
+import com.webtech.urlshortener.configuration.Resettable;
 import com.webtech.urlshortener.repository.ShortUrlRepository;
 import com.webtech.urlshortener.repository.entity.ShortUrlEntity;
 import org.springframework.stereotype.Repository;
@@ -9,7 +10,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Repository
-public class ShortUrlInMemRepository implements ShortUrlRepository {
+public class ShortUrlInMemRepository implements ShortUrlRepository, Resettable {
 
     private final AtomicInteger counter = new AtomicInteger();
     private final Map<String, ShortUrlEntity> urlsByShort = new HashMap<>();
@@ -41,5 +42,12 @@ public class ShortUrlInMemRepository implements ShortUrlRepository {
         }
         urlsById.remove(urlId);
         urlsByShort.remove(to.getShortUrl());
+    }
+
+    @Override
+    public void reset() {
+        counter.set(0);
+        urlsByShort.clear();
+        urlsById.clear();
     }
 }

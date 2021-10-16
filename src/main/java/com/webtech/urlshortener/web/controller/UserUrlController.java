@@ -6,7 +6,7 @@ import com.webtech.urlshortener.service.url.UserUrlService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("user/{userId}/urls")
+@RequestMapping("users/{userId}/urls")
 public class UserUrlController {
 
     private final UserUrlService urlService;

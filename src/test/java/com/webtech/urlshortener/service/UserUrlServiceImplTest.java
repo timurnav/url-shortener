@@ -86,17 +86,4 @@ public class UserUrlServiceImplTest {
 
         verify(userService, never()).adjust(eq(USER_ID), any(UserUrlRemoved.class));
     }
-
-    @Test
-    public void testMockito() {
-        Mockito.when(hashProvider.getNextHash())
-                .thenReturn(SHORT_URL)
-                .thenReturn(LONG_URL);
-
-        System.out.println(hashProvider.getNextHash());
-        System.out.println(hashProvider.getNextHash());
-        System.out.println(hashProvider.getNextHash());
-        System.out.println(hashProvider.getNextHash());
-        System.out.println(hashProvider.getNextHash());
-    }
 }
